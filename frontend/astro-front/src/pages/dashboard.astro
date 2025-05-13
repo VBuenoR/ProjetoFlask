@@ -1,0 +1,39 @@
+---
+import "../styles/global.css";
+---
+
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body class="min-h-screen bg-gradient-to-br from-[#181A20] via-blue-900 to-blue-700">
+    <div class="flex justify-end p-4">
+      <button
+        id="logout-btn"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded px-4 py-2 transition"
+      >
+        Sair
+      </button>
+    </div>
+    <div class="text-white text-2xl text-center mt-12">
+      Bem-vindo ao dashboard!
+    </div>
+    <script type="module">
+      const logoutBtn = document.getElementById("logout-btn");
+      logoutBtn.addEventListener("click", async () => {
+        const res = await fetch("http://127.0.0.1:5000/logout", {
+          method: "POST",
+          credentials: "include", // importante se usar sessões/cookies
+        });
+        const data = await res.json();
+        if (data.success) {
+          window.location.href = "/login";
+        } else {
+          alert("Erro ao sair: " + data.message);
+        }
+      });
+    </script>
+  </body>
+</html>

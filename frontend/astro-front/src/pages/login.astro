@@ -1,0 +1,102 @@
+---
+import "../styles/global.css";
+let message = "";
+let loading = false;
+
+async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault();
+  loading = true;
+  message = "";
+  const form = e.target as HTMLFormElement;
+  const email = (form.elements.namedItem("email") as HTMLInputElement).value;
+  const password = (form.elements.namedItem("password") as HTMLInputElement).value;
+
+  const res = await fetch("http://127.0.0.1:5000/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  const data = await res.json();
+  loading = false;
+  message = data.message;
+  if (data.success) {
+    window.location.href = "/dashboard";
+  }
+}
+---
+
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#181A20] via-blue-900 to-blue-700">
+    <form
+      class="bg-[#181A20] bg-opacity-90 p-8 rounded-xl shadow-xl w-full max-w-md"
+      id="login-form"
+    >
+      <h2 class="text-3xl font-bold text-blue-400 mb-6 text-center">Login</h2>
+      <label class="block mb-2 text-blue-200">Email</label>
+      <input
+        name="email"
+        type="email"
+        class="w-full p-3 mb-4 rounded bg-gray-800 text-white"
+        placeholder="Digite seu email"
+        required
+      />
+      <label class="block mb-2 text-blue-200">Senha</label>
+      <input
+        name="password"
+        type="password"
+        class="w-full p-3 mb-4 rounded bg-gray-800 text-white"
+        placeholder="Digite sua senha"
+        required
+      />
+      <button
+        type="submit"
+        id="submit-btn"
+        class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded transition"
+      >
+        Entrar
+      </button>
+      <div id="message" class="mt-4 text-center text-blue-300"></div>
+      <div class="mt-6 text-center">
+        <a href="/register" class="text-blue-400 hover:underline">
+          Não tem conta? Cadastre-se
+        </a>
+      </div>
+    </form>
+
+    <script type="module">
+      const form = document.getElementById("login-form");
+      const messageDiv = document.getElementById("message");
+      const submitBtn = document.getElementById("submit-btn");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Entrando...";
+        messageDiv.textContent = "";
+
+        const email = form.email.value;
+        const password = form.password.value;
+
+        const res = await fetch("http://127.0.0.1:5000/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await res.json();
+        messageDiv.textContent = data.message;
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Entrar";
+
+        if (data.success) {
+          window.location.href = "/dashboard";
+        }
+      });
+    </script>
+  </body>
+</html>

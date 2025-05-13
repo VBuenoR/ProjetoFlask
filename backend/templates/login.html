@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<style>
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f2027 0%, #2c5364 50%, #1e3c72 100%);
+  }
+  .login-card {
+    background: #181a20;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    padding: 2.5rem 2rem;
+    width: 400px;
+    margin: 0 auto;
+  }
+  .login-title {
+    color: #3993ff;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .form-label {
+    color: #b3c6ff;
+    font-weight: 500;
+  }
+  .form-control {
+    background: #23272f;
+    color: #fff;
+    border: none;
+  }
+  .form-control:focus {
+    background: #23272f;
+    color: #fff;
+    border-color: #3993ff;
+    box-shadow: 0 0 0 0.2rem rgba(57, 147, 255, 0.25);
+  }
+  .btn-login {
+    background: #3993ff;
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    transition: background 0.2s;
+  }
+  .btn-login:hover, .btn-login:focus {
+    background: #2666b5;
+    color: #fff;
+  }
+  .register-link {
+    color: #3993ff;
+    text-align: center;
+    display: block;
+    margin-top: 1rem;
+    text-decoration: none;
+  }
+  .register-link:hover {
+    text-decoration: underline;
+    color: #2666b5;
+  }
+</style>
+
+<div class="d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+  <div class="login-card">
+    <h2 class="login-title">Login</h2>
+    <form method="POST">
+      {{ form.hidden_tag() }}
+      <div class="mb-3">
+        {{ form.email.label(class="form-label") }}
+        {{ form.email(class="form-control") }}
+        {% for error in form.email.errors %}
+          <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+      <div class="mb-3">
+        {{ form.password.label(class="form-label") }}
+        {{ form.password(class="form-control") }}
+        {% for error in form.password.errors %}
+          <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+      {{ form.submit(class="btn btn-login") }}
+      <a href="{{ url_for('register') }}" class="register-link">Não tem conta? Cadastre-se</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

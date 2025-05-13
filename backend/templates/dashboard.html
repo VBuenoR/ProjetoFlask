@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<style>
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f2027 0%, #2c5364 50%, #1e3c72 100%);
+  }
+  .dashboard-card {
+    background: #f8f9fa;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    padding: 2.5rem 2rem;
+    max-width: 500px;
+    margin: 0 auto;
+    color: #181a20;
+  }
+  .dashboard-title {
+    color: #3993ff;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .dashboard-text {
+    color: #23272f;
+    text-align: center;
+    font-size: 1.15rem;
+  }
+</style>
+<div class="d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+  <div class="dashboard-card">
+    <h2 class="dashboard-title">Olá, {{ current_user.username }}!</h2>
+    <p class="dashboard-text">Use o menu acima para gerenciar seus contatos e mensagens.</p>
+  </div>
+</div>
+{% endblock %}

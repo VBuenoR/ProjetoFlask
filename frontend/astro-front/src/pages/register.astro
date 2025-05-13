@@ -1,0 +1,112 @@
+---
+// src/pages/register.astro
+import "../styles/global.css";
+---
+
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cadastro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#181A20] via-blue-900 to-blue-700">
+    <form
+      class="bg-[#181A20] bg-opacity-90 p-8 rounded-xl shadow-xl w-full max-w-md"
+      id="register-form"
+    >
+      <h2 class="text-3xl font-bold text-blue-400 mb-6 text-center">Cadastro</h2>
+      <label class="block mb-2 text-blue-200">Usuário</label>
+      <input
+        name="username"
+        type="text"
+        class="w-full p-3 mb-4 rounded bg-gray-800 text-white"
+        placeholder="Digite seu usuário"
+        required
+      />
+      <label class="block mb-2 text-blue-200">Email</label>
+      <input
+        name="email"
+        type="email"
+        class="w-full p-3 mb-4 rounded bg-gray-800 text-white"
+        placeholder="Digite seu email"
+        required
+      />
+      <label class="block mb-2 text-blue-200">Senha</label>
+      <input
+        name="password"
+        type="password"
+        class="w-full p-3 mb-4 rounded bg-gray-800 text-white"
+        placeholder="Digite sua senha"
+        required
+      />
+      <label class="block mb-2 text-blue-200">Confirmar Senha</label>
+      <input
+        name="confirm"
+        type="password"
+        class="w-full p-3 mb-4 rounded bg-gray-800 text-white"
+        placeholder="Confirme sua senha"
+        required
+      />
+      <button
+        type="submit"
+        id="submit-btn"
+        class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded transition"
+      >
+        Cadastrar
+      </button>
+      <div id="message" class="mt-4 text-center text-blue-300"></div>
+      <div class="mt-6 text-center">
+        <a href="/login" class="text-blue-400 hover:underline">
+          Já tem conta? Entrar
+        </a>
+      </div>
+    </form>
+
+    <script type="module">
+      const form = document.getElementById("register-form");
+      const messageDiv = document.getElementById("message");
+      const submitBtn = document.getElementById("submit-btn");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Cadastrando...";
+        messageDiv.textContent = "";
+
+        const username = form.username.value;
+        const email = form.email.value;
+        const password = form.password.value;
+        const confirm = form.confirm.value;
+
+        if (password !== confirm) {
+          messageDiv.textContent = "As senhas não coincidem!";
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Cadastrar";
+          return;
+        }
+
+        try {
+          const res = await fetch("http://127.0.0.1:5000/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, email, password }),
+          });
+
+          const data = await res.json();
+          messageDiv.textContent = data.message;
+
+          if (data.success) {
+            window.location.href = "/login";
+          } else {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Cadastrar";
+          }
+        } catch (err) {
+          messageDiv.textContent = "Erro ao conectar com o servidor.";
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Cadastrar";
+        }
+      });
+    </script>
+  </body>
+</html>

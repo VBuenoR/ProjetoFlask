@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}Contatos{% endblock %}
+{% block content %}
+<style>
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f2027 0%, #2c5364 50%, #1e3c72 100%);
+  }
+  .contacts-card {
+    background: #f8f9fa;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    padding: 2.5rem 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+    color: #181a20;
+  }
+  .contacts-title {
+    color: #3993ff;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .form-label {
+    color: #3993ff;
+    font-weight: 500;
+  }
+  .form-control {
+    background: #fff;
+    color: #181a20;
+    border: 1px solid #ced4da;
+  }
+  .form-control:focus {
+    background: #fff;
+    color: #181a20;
+    border-color: #3993ff;
+    box-shadow: 0 0 0 0.2rem rgba(57, 147, 255, 0.15);
+  }
+  .btn-add-contact {
+    background: #3993ff;
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    width: 100%;
+    transition: background 0.2s;
+  }
+  .btn-add-contact:hover, .btn-add-contact:focus {
+    background: #2666b5;
+    color: #fff;
+  }
+  .table th {
+    color: #3993ff;
+    font-weight: 600;
+    background: #e9ecef;
+    border-top: none;
+  }
+  .table td {
+    color: #181a20;
+    background: #fff;
+    vertical-align: middle;
+  }
+  .table-striped > tbody > tr:nth-of-type(odd) > * {
+    background-color: #f3f6fa;
+  }
+</style>
+<div class="d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+  <div class="contacts-card w-100">
+    <h2 class="contacts-title">Meus Contatos</h2>
+    <form method="POST" class="mb-4">
+      {{ form.hidden_tag() }}
+      <div class="row g-2">
+        <div class="col-md-4">
+          {{ form.name.label(class="form-label") }}
+          {{ form.name(class="form-control bg-light text-dark") }}
+          {% for error in form.name.errors %}
+            <div class="text-danger">{{ error }}</div>
+          {% endfor %}
+        </div>
+        <div class="col-md-4">
+          {{ form.email.label(class="form-label") }}
+          {{ form.email(class="form-control bg-light text-dark") }}
+          {% for error in form.email.errors %}
+            <div class="text-danger">{{ error }}</div>
+          {% endfor %}
+        </div>
+        <div class="col-md-3">
+          {{ form.phone.label(class="form-label") }}
+          {{ form.phone(class="form-control bg-light text-dark") }}
+          {% for error in form.phone.errors %}
+            <div class="text-danger">{{ error }}</div>
+          {% endfor %}
+        </div>
+        <div class="col-md-1 d-flex align-items-end">
+          {{ form.submit(class="btn btn-add-contact w-100") }}
+        </div>
+      </div>
+    </form>
+    <table class="table table-striped align-middle">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Celular</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for contact in contacts %}
+          <tr>
+            <td>{{ contact.name }}</td>
+            <td>{{ contact.email }}</td>
+            <td>{{ contact.phone }}</td>
+            <td>
+                <a href="{{ url_for('chat', contact_id=contact.id) }}" class="btn btn-primary btn-sm me-2">
+                  Mensagem
+                </a>
+                <a href="{{ url_for('edit_contact', contact_id=contact.id) }}" class="btn btn-warning btn-sm me-2">
+                  Editar
+                </a>
+                <form method="POST" action="{{ url_for('delete_contact', contact_id=contact.id) }}" style="display:inline;">
+                  <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Excluir contato?');">
+                    Excluir
+                  </button>
+                </form>
+              </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>      
+  </div>
+</div>
+{% endblock %}
